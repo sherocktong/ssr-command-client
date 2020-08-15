@@ -171,15 +171,26 @@ def generate_ssr_display_table(ssr_info_dict_list):
 # 获取ssr节点ping值
 def get_ping_speed(server, remarks):
     color = colored()
-    ping_speed = ping3.ping(server, timeout=5, unit='ms')
-    if ping_speed:
-        flag = color.green('√')
-        ping_speed = format(ping_speed, '.3f')
+    if check_ip_addr(server):
+        ping_speed = ping3.ping(server, timeout=5, unit='ms')
+        if ping_speed:
+            flag = color.green('√')
+            ping_speed = format(ping_speed, '.3f')
+        else:
+            flag = color.red('×')
+            ping_speed = '∞'
     else:
         flag = color.red('×')
         ping_speed = '∞'
     print("Testing ping:", remarks, server, flag)
     return ping_speed
+
+def check_ip_addr(server):
+    ipRe = "^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$"
+    if re.search(ipRe, server):
+        return True
+    else:
+        return False
 
 # 获取用户家目录
 def get_home_dir():
